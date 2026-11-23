@@ -21,12 +21,12 @@
 
     def get_expenses_by_category(self, category):
         return [
-            item for item in self._expenses
+            dict(item) for item in self._expenses
             if item["category"].lower() == category.lower()
         ]
 
     def get_expenses(self):
-        return list(self._expenses)
+        return [dict(item) for item in self._expenses]
 
 
 def main():

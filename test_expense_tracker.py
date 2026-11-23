@@ -57,6 +57,27 @@ class ExpenseTrackerTests(unittest.TestCase):
 
         self.assertEqual(len(self.manager.get_expenses()), 1)
 
+    def test_mutating_returned_expense_dict_does_not_affect_manager(self):
+        self.manager.add_expense(10, "Food", "Lunch")
+
+        returned = self.manager.get_expenses()[0]
+        returned["amount"] = 999
+        returned["category"] = "Modified"
+
+        stored = self.manager.get_expenses()[0]
+        self.assertEqual(stored["amount"], 10)
+        self.assertEqual(stored["category"], "Food")
+        self.assertEqual(stored["description"], "Lunch")
+
+    def test_mutating_filtered_expense_dict_does_not_affect_manager(self):
+        self.manager.add_expense(10, "Food")
+
+        returned = self.manager.get_expenses_by_category("food")[0]
+        returned["amount"] = 999
+
+        stored = self.manager.get_expenses_by_category("Food")[0]
+        self.assertEqual(stored["amount"], 10)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,8 +1,12 @@
-﻿class ExpenseManager:
+﻿import math
+
+class ExpenseManager:
     def __init__(self):
         self._expenses = []
 
     def add_expense(self, amount, category, description=""):
+        if not math.isfinite(amount):
+            raise ValueError("Amount must be a finite number")
         if amount <= 0:
             raise ValueError("Amount must be greater than zero")
         if not category.strip():
@@ -14,7 +18,7 @@
             "description": description.strip()
         }
         self._expenses.append(expense)
-        return expense
+        return dict(expense)
 
     def get_total(self):
         return round(sum(item["amount"] for item in self._expenses), 2)
@@ -74,3 +78,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

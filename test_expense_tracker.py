@@ -1,4 +1,4 @@
-import unittest
+﻿import unittest
 
 from expense_tracker import ExpenseManager
 
@@ -42,28 +42,22 @@ class ExpenseTrackerTests(unittest.TestCase):
     def test_managers_do_not_share_expenses(self):
         manager_a = ExpenseManager()
         manager_b = ExpenseManager()
-
         manager_a.add_expense(10, "Food")
-
         self.assertEqual(len(manager_a.get_expenses()), 1)
         self.assertEqual(manager_b.get_expenses(), [])
         self.assertEqual(manager_b.get_total(), 0)
 
     def test_mutating_returned_list_does_not_affect_manager(self):
         self.manager.add_expense(10, "Food")
-
         expenses = self.manager.get_expenses()
         expenses.clear()
-
         self.assertEqual(len(self.manager.get_expenses()), 1)
 
     def test_mutating_returned_expense_dict_does_not_affect_manager(self):
         self.manager.add_expense(10, "Food", "Lunch")
-
         returned = self.manager.get_expenses()[0]
         returned["amount"] = 999
         returned["category"] = "Modified"
-
         stored = self.manager.get_expenses()[0]
         self.assertEqual(stored["amount"], 10)
         self.assertEqual(stored["category"], "Food")
@@ -71,12 +65,23 @@ class ExpenseTrackerTests(unittest.TestCase):
 
     def test_mutating_filtered_expense_dict_does_not_affect_manager(self):
         self.manager.add_expense(10, "Food")
-
         returned = self.manager.get_expenses_by_category("food")[0]
         returned["amount"] = 999
-
         stored = self.manager.get_expenses_by_category("Food")[0]
         self.assertEqual(stored["amount"], 10)
+
+    def test_mutating_add_expense_result_does_not_affect_manager(self):
+        returned = self.manager.add_expense(10, "Food")
+        returned["amount"] = 999
+        self.assertEqual(self.manager.get_total(), 10)
+
+    def test_reject_nan_amount(self):
+        with self.assertRaises(ValueError):
+            self.manager.add_expense(float("nan"), "Food")
+
+    def test_reject_infinite_amount(self):
+        with self.assertRaises(ValueError):
+            self.manager.add_expense(float("inf"), "Food")
 
 
 if __name__ == "__main__":

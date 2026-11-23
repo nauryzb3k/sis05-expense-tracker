@@ -1,4 +1,4 @@
-﻿import unittest
+import unittest
 
 from expense_tracker import ExpenseManager
 
